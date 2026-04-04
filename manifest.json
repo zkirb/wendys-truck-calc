@@ -1,0 +1,18 @@
+{
+  "name": "Truck Order Calculator — Delight Restaurant Group",
+  "short_name": "Truck Calc",
+  "description": "Calculate food, paper & toys budgets per truck order",
+  "start_url": "/wendys-truck-calc/",
+  "display": "standalone",
+  "background_color": "#fdf7f3",
+  "theme_color": "#E2203A",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
