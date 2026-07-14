@@ -636,6 +636,36 @@
     background: rgba(255, 255, 255, 0.14); border: 1px solid rgba(255, 255, 255, 0.22); color: white;
   }
   .speed-note svg { flex-shrink: 0; }
+
+  /* ── Period-length segmented toggle ── */
+  .seg-toggle { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .seg-btn {
+    background: var(--surface);
+    border: 2px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--muted);
+    padding: 12px 10px;
+    cursor: pointer;
+    transition: all var(--transition);
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+  }
+  .seg-btn span { font-size: 10px; font-weight: 600; letter-spacing: 0.04em; opacity: 0.75; }
+  .seg-btn:hover { border-color: var(--border-strong); color: var(--ink); }
+  .seg-btn:active { transform: scale(0.97); }
+  .seg-btn.is-on {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: white;
+    box-shadow: 0 2px 8px rgba(226, 32, 58, 0.25);
+  }
 </style>
 </head>
 <body>
@@ -939,6 +969,18 @@
 
       <div style="display:flex;flex-direction:column;gap:14px;">
 
+        <!-- Period length -->
+        <div class="input-card">
+          <div class="field">
+            <label class="field-label">Period Length</label>
+            <div class="field-hint">Is this a 4-week or 5-week period?</div>
+            <div class="seg-toggle" role="group" aria-label="Period length">
+              <button type="button" class="seg-btn is-on" id="segWeeks4" onclick="setPeriodLength(28)">4 Weeks<span>28 days</span></button>
+              <button type="button" class="seg-btn" id="segWeeks5" onclick="setPeriodLength(35)">5 Weeks<span>35 days</span></button>
+            </div>
+          </div>
+        </div>
+
         <!-- Goal Speed -->
         <div class="input-card">
           <div class="field">
@@ -960,7 +1002,7 @@
         <!-- Day of Period -->
         <div class="input-card">
           <div class="field">
-            <label class="field-label" for="speedDay">Day of Period (1–28)</label>
+            <label class="field-label" for="speedDay">Day of Period (1–<span class="period-days">28</span>)</label>
             <div class="field-wrap">
               <input class="field-input" id="speedDay"
                 type="number" inputmode="numeric" min="1" max="28" step="1" placeholder="1"
@@ -1052,11 +1094,11 @@
         </svg>
       </summary>
       <div style="padding:16px 20px;font-family:'JetBrains Mono', monospace;font-size:12px;color:var(--muted);line-height:1.7;border-top:1px solid var(--border)">
-        <p>required = (goal × 28 − currentAvg × daysDone) / daysLeft</p>
+        <p>required = (goal × <span class="period-days">28</span> − currentAvg × daysDone) / daysLeft</p>
         <p style="margin-top:8px">daysDone = dayOfPeriod − 1</p>
-        <p>daysLeft = 28 − daysDone</p>
+        <p>daysLeft = <span class="period-days">28</span> − daysDone</p>
         <p style="margin-top:12px;font-family:'DM Sans',sans-serif;font-style:italic;color:var(--muted-light)">
-          Period performance is a simple average of all 28 daily speeds.
+          Period performance is a simple average of all <span class="period-days">28</span> daily speeds.
         </p>
       </div>
     </details>
@@ -1238,8 +1280,23 @@
 
   // ── DT Speed planner ─────────────────────────────────────────────────────────
   const SPEED_KEY = 'wendys-truck-calc-speed-v1';
-  const SPEED_TOTAL_DAYS = 28;
-  const SPEED_DEFAULTS = { goal: '175', day: '1', avg: '' };
+  let speedTotalDays = 28;  // 28 (4-week) or 35 (5-week) period
+  const SPEED_DEFAULTS = { goal: '175', day: '1', avg: '', days: 28 };
+
+  function setPeriodLength(days, opts) {
+    speedTotalDays = (days === 35 || days === '35') ? 35 : 28;
+    el('segWeeks4').classList.toggle('is-on', speedTotalDays === 28);
+    el('segWeeks5').classList.toggle('is-on', speedTotalDays === 35);
+    el('speedDay').setAttribute('max', String(speedTotalDays));
+    const dayErr = el('speedDay-error').querySelector('span');
+    if (dayErr) dayErr.textContent = 'Must be 1–' + speedTotalDays;
+    document.querySelectorAll('.period-days').forEach(s => s.textContent = speedTotalDays);
+    if (!opts || !opts.silent) {
+      if (navigator.vibrate) navigator.vibrate(8);
+      saveSpeed();
+      speedCalc();
+    }
+  }
 
   // Speeds are plain seconds (Wendy's states the DT goal as 175 seconds).
   function parseSeconds(str) {
@@ -1259,7 +1316,7 @@
   function saveSpeed() {
     try {
       localStorage.setItem(SPEED_KEY, JSON.stringify({
-        goal: el('speedGoal').value, day: el('speedDay').value, avg: el('speedAvg').value
+        goal: el('speedGoal').value, day: el('speedDay').value, avg: el('speedAvg').value, days: speedTotalDays
       }));
     } catch(e) {}
   }
@@ -1273,12 +1330,14 @@
     el('speedGoal').value = saved.goal;
     el('speedDay').value  = saved.day;
     el('speedAvg').value  = saved.avg;
+    setPeriodLength(saved.days, { silent: true });
   }
 
   function resetSpeed() {
     el('speedGoal').value = SPEED_DEFAULTS.goal;
     el('speedDay').value  = SPEED_DEFAULTS.day;
     el('speedAvg').value  = SPEED_DEFAULTS.avg;
+    setPeriodLength(SPEED_DEFAULTS.days, { silent: true });
     if (navigator.vibrate) navigator.vibrate(10);
     try { localStorage.removeItem(SPEED_KEY); } catch(e) {}
     speedCalc();
@@ -1302,9 +1361,9 @@
     const dayNum  = parseInt(dayRaw, 10);
     const avgSec  = parseSeconds(avgRaw);
 
-    const validDay = !isNaN(dayNum) && dayNum >= 1 && dayNum <= 28;
+    const validDay = !isNaN(dayNum) && dayNum >= 1 && dayNum <= speedTotalDays;
     const daysDone = validDay ? dayNum - 1 : 0;
-    const daysLeft = validDay ? SPEED_TOTAL_DAYS - daysDone : 0;
+    const daysLeft = validDay ? speedTotalDays - daysDone : 0;
     const needsAvg = daysDone > 0;
 
     setSpeedError('speedGoal', goalRaw.length > 0 && goalSec === null);
@@ -1320,9 +1379,9 @@
       el('speedDayBadge').textContent  = 'Day ' + dayInWeek;
       el('speedBadges').style.display = 'flex';
 
-      const pct = (daysDone / SPEED_TOTAL_DAYS) * 100;
+      const pct = (daysDone / speedTotalDays) * 100;
       el('speedProgressFill').style.width = pct + '%';
-      el('speedProgressDays').textContent = daysDone + '/' + SPEED_TOTAL_DAYS + ' days done';
+      el('speedProgressDays').textContent = daysDone + '/' + speedTotalDays + ' days done';
       el('speedProgressLeft').textContent = daysLeft + ' day' + (daysLeft !== 1 ? 's' : '') + ' left';
       el('speedProgressPct').textContent  = Math.round(pct) + '%';
       el('speedProgress').style.display = 'block';
@@ -1337,7 +1396,7 @@
       if (daysDone === 0) { requiredSec = goalSec; status = 'day1'; }
       else if (daysLeft <= 0) { status = 'final'; }
       else if (avgSec !== null) {
-        const raw = (goalSec * SPEED_TOTAL_DAYS - avgSec * daysDone) / daysLeft;
+        const raw = (goalSec * speedTotalDays - avgSec * daysDone) / daysLeft;
         if (raw < 0) { requiredSec = 0; status = 'ahead'; }
         else { requiredSec = raw; status = 'ok'; }
       }
@@ -1373,15 +1432,15 @@
     if (status === 'ahead') {
       result.classList.add('green');
       labelEl.textContent = 'Ahead of Goal';
-      valueEl.textContent = '0:00';
-      subEl.textContent = "Even at 0:00 the math says you're beating goal. Keep it up!";
+      valueEl.textContent = '0s';
+      subEl.textContent = "Even at 0s the math says you're beating goal. Keep it up!";
       return;
     }
     if (status === 'final') {
       result.classList.add('brand');
       labelEl.textContent = 'Period Complete';
       valueEl.textContent = formatSeconds(avgSec);
-      subEl.textContent = 'All 28 days are done. Your final average is your period result.';
+      subEl.textContent = 'All ' + speedTotalDays + ' days are done. Your final average is your period result.';
       return;
     }
 
