@@ -919,7 +919,7 @@
         <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a.75.75 0 000 1.5h.253a.25.25 0 01.244.304l-.459 2.066A1.75 1.75 0 0010.747 15H11a.75.75 0 000-1.5h-.253a.25.25 0 01-.244-.304l.459-2.066A1.75 1.75 0 009.253 9H9z" clip-rule="evenodd"/>
       </svg>
       <p>
-        <strong>28-day period planner</strong> — find the speed you must run from today forward to finish the period at your 2:55 (175s) goal.
+        <strong>28-day period planner</strong> — find the speed you must run from today forward to finish the period at your 175-second goal.
       </p>
     </div>
 
@@ -942,16 +942,17 @@
         <!-- Goal Speed -->
         <div class="input-card">
           <div class="field">
-            <label class="field-label" for="speedGoal">Goal Speed (mm:ss)</label>
-            <div class="field-hint">Your DT order-to-delivery target — Wendy's goal is 2:55 (175s)</div>
+            <label class="field-label" for="speedGoal">Goal Speed (seconds)</label>
+            <div class="field-hint">Your DT order-to-delivery target — Wendy's goal is 175 seconds</div>
             <div class="field-wrap">
-              <input class="field-input" id="speedGoal"
-                type="text" inputmode="text" placeholder="2:55"
+              <input class="field-input has-suffix" id="speedGoal"
+                type="number" inputmode="numeric" min="0" step="1" placeholder="175"
                 oninput="onSpeedInput()" autocomplete="off" />
+              <span class="field-suffix">sec</span>
             </div>
             <div class="field-error" id="speedGoal-error" role="alert" aria-live="polite" style="display:none">
               <svg width="14" height="14" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 10a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"/></svg>
-              <span>Enter time as m:ss (e.g. 2:55)</span>
+              <span>Enter a whole number of seconds (e.g. 175)</span>
             </div>
           </div>
         </div>
@@ -979,16 +980,17 @@
         <!-- Current Period Avg (conditional) -->
         <div class="input-card" id="speedAvgCard" style="display:none">
           <div class="field">
-            <label class="field-label" for="speedAvg">Current Period Avg (mm:ss)</label>
+            <label class="field-label" for="speedAvg">Current Period Avg (seconds)</label>
             <div class="field-hint">Your average so far this period</div>
             <div class="field-wrap">
-              <input class="field-input" id="speedAvg"
-                type="text" inputmode="text" placeholder="3:10"
+              <input class="field-input has-suffix" id="speedAvg"
+                type="number" inputmode="numeric" min="0" step="1" placeholder="190"
                 oninput="onSpeedInput()" autocomplete="off" />
+              <span class="field-suffix">sec</span>
             </div>
             <div class="field-error" id="speedAvg-error" role="alert" aria-live="polite" style="display:none">
               <svg width="14" height="14" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 10a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"/></svg>
-              <span>Enter time as m:ss (e.g. 3:10)</span>
+              <span>Enter a whole number of seconds (e.g. 190)</span>
             </div>
           </div>
         </div>
@@ -1020,16 +1022,16 @@
       </div>
       <div class="speed-result empty" id="speedResult">
         <div class="speed-result-label" id="speedResultLabel">Required Pace</div>
-        <div class="speed-result-value" id="speedResultValue">—:—</div>
+        <div class="speed-result-value" id="speedResultValue">—</div>
         <div class="speed-result-sub" id="speedResultSub">Enter your goal &amp; day to see your required speed</div>
         <div class="speed-stats" id="speedStats" style="display:none">
           <div class="speed-stat">
             <div class="speed-stat-label">Goal</div>
-            <div class="speed-stat-value" id="speedStatGoal">—:—</div>
+            <div class="speed-stat-value" id="speedStatGoal">—</div>
           </div>
           <div class="speed-stat">
             <div class="speed-stat-label">Current Avg</div>
-            <div class="speed-stat-value" id="speedStatAvg">—:—</div>
+            <div class="speed-stat-value" id="speedStatAvg">—</div>
           </div>
         </div>
         <div class="speed-note" id="speedNote" style="display:none">
@@ -1237,26 +1239,21 @@
   // ── DT Speed planner ─────────────────────────────────────────────────────────
   const SPEED_KEY = 'wendys-truck-calc-speed-v1';
   const SPEED_TOTAL_DAYS = 28;
-  const SPEED_DEFAULTS = { goal: '2:55', day: '1', avg: '' };
+  const SPEED_DEFAULTS = { goal: '175', day: '1', avg: '' };
 
-  function parseMMSS(str) {
-    if (!str || typeof str !== 'string') return null;
-    const cleaned = str.replace(/[^0-9:]/g, '');
-    const parts = cleaned.split(':');
-    if (parts.length !== 2) return null;
-    const m = parseInt(parts[0], 10);
-    const s = parseInt(parts[1], 10);
-    if (isNaN(m) || isNaN(s)) return null;
-    if (m < 0 || s < 0 || s > 59) return null;
-    return m * 60 + s;
+  // Speeds are plain seconds (Wendy's states the DT goal as 175 seconds).
+  function parseSeconds(str) {
+    if (str === null || str === undefined) return null;
+    const cleaned = String(str).replace(/[^0-9]/g, '');
+    if (cleaned === '') return null;
+    const n = parseInt(cleaned, 10);
+    if (isNaN(n) || n < 0) return null;
+    return n;
   }
 
-  function formatMMSS(totalSec) {
-    if (totalSec === null || totalSec === undefined || isNaN(totalSec)) return '—:—';
-    const clamped = Math.max(0, Math.round(totalSec));
-    const m = Math.floor(clamped / 60);
-    const s = clamped % 60;
-    return m + ':' + (s < 10 ? '0' + s : s);
+  function formatSeconds(totalSec) {
+    if (totalSec === null || totalSec === undefined || isNaN(totalSec)) return '—';
+    return Math.max(0, Math.round(totalSec)) + 's';
   }
 
   function saveSpeed() {
@@ -1301,9 +1298,9 @@
     const dayRaw  = el('speedDay').value;
     const avgRaw  = el('speedAvg').value;
 
-    const goalSec = parseMMSS(goalRaw);
+    const goalSec = parseSeconds(goalRaw);
     const dayNum  = parseInt(dayRaw, 10);
-    const avgSec  = parseMMSS(avgRaw);
+    const avgSec  = parseSeconds(avgRaw);
 
     const validDay = !isNaN(dayNum) && dayNum >= 1 && dayNum <= 28;
     const daysDone = validDay ? dayNum - 1 : 0;
@@ -1360,7 +1357,7 @@
     if (status === null) {
       result.classList.add('empty');
       labelEl.textContent = 'Required Pace';
-      valueEl.textContent = '—:—';
+      valueEl.textContent = '—';
       subEl.textContent = needsAvg
         ? 'Enter your goal, day, and current average to calculate.'
         : 'Enter your goal & day to see your required speed.';
@@ -1369,7 +1366,7 @@
     if (status === 'day1') {
       result.classList.add('green');
       labelEl.textContent = 'Day 1 — Hit Your Goal';
-      valueEl.textContent = formatMMSS(goalSec);
+      valueEl.textContent = formatSeconds(goalSec);
       subEl.textContent = 'No history yet. Run at goal speed to start on track.';
       return;
     }
@@ -1383,7 +1380,7 @@
     if (status === 'final') {
       result.classList.add('brand');
       labelEl.textContent = 'Period Complete';
-      valueEl.textContent = formatMMSS(avgSec);
+      valueEl.textContent = formatSeconds(avgSec);
       subEl.textContent = 'All 28 days are done. Your final average is your period result.';
       return;
     }
@@ -1393,11 +1390,11 @@
     else if (requiredSec > goalSec) result.classList.add('amber');
     else result.classList.add('brand');
     labelEl.textContent = 'Required Avg From Today';
-    valueEl.textContent = formatMMSS(requiredSec);
+    valueEl.textContent = formatSeconds(requiredSec);
     subEl.textContent = '';
 
-    el('speedStatGoal').textContent = formatMMSS(goalSec);
-    el('speedStatAvg').textContent  = formatMMSS(avgSec);
+    el('speedStatGoal').textContent = formatSeconds(goalSec);
+    el('speedStatAvg').textContent  = formatSeconds(avgSec);
     statsEl.style.display = 'grid';
 
     if (requiredSec > goalSec * 1.15) {
