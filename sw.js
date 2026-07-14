@@ -1,4 +1,4 @@
-const CACHE_NAME = 'wendys-truck-calc-v5';
+const CACHE_NAME = 'wendys-truck-calc-v6';
 const ASSETS = [
   './',
   './index.html',
