@@ -524,6 +524,118 @@
   #resultsBlock {
     animation: fadeIn 0.3s ease-out;
   }
+
+  /* ── Tabs ── */
+  .tabs {
+    max-width: 540px;
+    margin: 0 auto;
+    padding: 12px 16px 0;
+    display: flex;
+    gap: 8px;
+  }
+  @media (min-width: 400px) { .tabs { padding: 16px 20px 0; } }
+  .tab {
+    flex: 1;
+    background: var(--surface);
+    border: 2px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--muted);
+    padding: 12px 10px;
+    cursor: pointer;
+    transition: all var(--transition);
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    white-space: nowrap;
+    min-width: 0;
+  }
+  .tab:hover { color: var(--ink); border-color: var(--border-strong); }
+  .tab:active { transform: scale(0.97); }
+  .tab.is-active {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: white;
+    box-shadow: 0 2px 8px rgba(226, 32, 58, 0.25);
+  }
+  .tab-panel[hidden] { display: none; }
+
+  /* ── Speed tab ── */
+  .section-heading-row { display: flex; justify-content: space-between; align-items: center; }
+  .ghost-btn {
+    display: flex; align-items: center; gap: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; font-weight: 600; color: var(--muted);
+    background: var(--surface); border: 1.5px solid var(--border);
+    border-radius: 10px; padding: 8px 12px; cursor: pointer;
+    transition: all var(--transition);
+    -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+  }
+  .ghost-btn:hover { color: var(--ink); border-color: var(--border-strong); }
+  .ghost-btn:active { transform: scale(0.96); }
+
+  .speed-badges { display: flex; gap: 6px; }
+  .speed-badge {
+    display: inline-flex; align-items: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.04em;
+    border-radius: 6px; padding: 4px 10px;
+  }
+  .speed-badge.primary { background: var(--primary-glow); color: var(--primary-deep); border: 1px solid var(--primary-border); }
+  .speed-badge.secondary { background: #f5f4f1; color: var(--muted); border: 1px solid var(--border); }
+
+  .speed-progress {
+    background: var(--surface); border: 2px solid var(--border);
+    border-radius: var(--radius); padding: 14px 16px; box-shadow: var(--shadow-card);
+  }
+  .speed-progress-head, .speed-progress-foot {
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+  }
+  .speed-progress-head { color: var(--muted); margin-bottom: 8px; }
+  .speed-progress-foot { color: var(--muted-light); margin-top: 8px; }
+  .speed-progress-bar { height: 6px; border-radius: 999px; background: #f0eee8; overflow: hidden; }
+  .speed-progress-fill {
+    height: 100%; border-radius: 999px;
+    background: linear-gradient(90deg, var(--primary), var(--primary-deep));
+    transition: width 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .speed-result {
+    border-radius: var(--radius); padding: 28px 24px; text-align: center; color: white;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+    transition: background 0.25s, border-color 0.25s, box-shadow 0.25s;
+  }
+  .speed-result.brand { background: linear-gradient(135deg, var(--primary), var(--primary-deep)); box-shadow: 0 4px 20px rgba(226, 32, 58, 0.3); }
+  .speed-result.green { background: linear-gradient(135deg, #16a34a, #15803d); box-shadow: 0 4px 20px rgba(22, 163, 74, 0.3); }
+  .speed-result.amber { background: linear-gradient(135deg, #f59e0b, #d97706); box-shadow: 0 4px 20px rgba(245, 158, 11, 0.3); }
+  .speed-result.red { background: linear-gradient(135deg, #ef4444, #b91c1c); box-shadow: 0 4px 20px rgba(239, 68, 68, 0.3); }
+  .speed-result.empty { background: var(--surface); border: 2px dashed var(--border-strong); color: var(--muted); box-shadow: none; }
+  .speed-result-label {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.12em; color: rgba(255, 255, 255, 0.78); margin-bottom: 8px;
+  }
+  .speed-result.empty .speed-result-label { color: var(--muted); }
+  .speed-result-value {
+    font-family: 'JetBrains Mono', monospace; font-size: 56px; font-weight: 800;
+    line-height: 1; letter-spacing: -0.03em; margin-bottom: 6px;
+  }
+  .speed-result.empty .speed-result-value { color: var(--muted-light); font-size: 38px; }
+  .speed-result-sub { font-size: 12px; color: rgba(255, 255, 255, 0.78); line-height: 1.5; max-width: 320px; margin: 0 auto; }
+  .speed-result.empty .speed-result-sub { color: var(--muted); }
+
+  .speed-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
+  .speed-stat { background: rgba(255, 255, 255, 0.14); border: 1px solid rgba(255, 255, 255, 0.18); border-radius: var(--radius-sm); padding: 10px 12px; text-align: left; }
+  .speed-stat-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: rgba(255, 255, 255, 0.68); margin-bottom: 2px; }
+  .speed-stat-value { font-family: 'JetBrains Mono', monospace; font-size: 18px; font-weight: 700; color: white; }
+
+  .speed-note {
+    margin-top: 14px; padding: 10px 12px; border-radius: var(--radius-sm);
+    display: flex; align-items: center; gap: 8px; font-size: 12px; line-height: 1.4; text-align: left;
+    background: rgba(255, 255, 255, 0.14); border: 1px solid rgba(255, 255, 255, 0.22); color: white;
+  }
+  .speed-note svg { flex-shrink: 0; }
 </style>
 </head>
 <body>
@@ -533,11 +645,11 @@
   <div class="header-inner">
     <div class="header-left">
       <div>
-        <div class="header-title">Truck Order Calc</div>
+        <div class="header-title" id="headerTitle">Truck Order Calc</div>
         <div class="header-sub">Delight Restaurant Group</div>
       </div>
     </div>
-    <button class="reset-btn" onclick="clearSales()" aria-label="Clear sales figure">
+    <button class="reset-btn" onclick="clearActive()" aria-label="Clear current tab inputs">
       <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
       </svg>
@@ -545,6 +657,12 @@
     </button>
   </div>
 </header>
+
+<!-- ── Tabs ── -->
+<nav class="tabs" role="tablist" aria-label="Calculator tabs">
+  <button class="tab is-active" data-tab="truck" role="tab" aria-selected="true" type="button">Truck Order</button>
+  <button class="tab" data-tab="speed" role="tab" aria-selected="false" type="button">DT Speed</button>
+</nav>
 
 <!-- ── Main ── -->
 <main class="main">
@@ -555,6 +673,9 @@
       alt="Delight Restaurant Group"
       style="max-width:220px;width:100%;height:auto;" />
   </div>
+
+  <!-- ── Truck Order panel ── -->
+  <div class="tab-panel" data-panel="truck" role="tabpanel">
 
   <!-- Info banner -->
   <div class="info-banner" role="note">
@@ -787,8 +908,161 @@
     </div>
   </section>
 
+  </div><!-- end truck panel -->
+
+  <!-- ── DT Speed panel ── -->
+  <div class="tab-panel" data-panel="speed" role="tabpanel" hidden>
+
+    <!-- Info banner -->
+    <div class="info-banner" role="note">
+      <svg width="18" height="18" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a.75.75 0 000 1.5h.253a.25.25 0 01.244.304l-.459 2.066A1.75 1.75 0 0010.747 15H11a.75.75 0 000-1.5h-.253a.25.25 0 01-.244-.304l.459-2.066A1.75 1.75 0 009.253 9H9z" clip-rule="evenodd"/>
+      </svg>
+      <p>
+        <strong>28-day period planner</strong> — find the speed you must run from today forward to finish the period at your 2:55 (175s) goal.
+      </p>
+    </div>
+
+    <!-- Inputs -->
+    <section aria-labelledby="speed-inputs-heading">
+      <div class="section-heading-row">
+        <div class="section-heading">
+          <h2 id="speed-inputs-heading">Inputs</h2>
+        </div>
+        <button type="button" class="ghost-btn" onclick="resetSpeed()" aria-label="Reset speed inputs to defaults">
+          <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 12a9 9 0 1015 -6.7L21 3m0 0v6m0-6h-6"/>
+          </svg>
+          Reset
+        </button>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:14px;">
+
+        <!-- Goal Speed -->
+        <div class="input-card">
+          <div class="field">
+            <label class="field-label" for="speedGoal">Goal Speed (mm:ss)</label>
+            <div class="field-hint">Your DT order-to-delivery target — Wendy's goal is 2:55 (175s)</div>
+            <div class="field-wrap">
+              <input class="field-input" id="speedGoal"
+                type="text" inputmode="text" placeholder="2:55"
+                oninput="onSpeedInput()" autocomplete="off" />
+            </div>
+            <div class="field-error" id="speedGoal-error" role="alert" aria-live="polite" style="display:none">
+              <svg width="14" height="14" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 10a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"/></svg>
+              <span>Enter time as m:ss (e.g. 2:55)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Day of Period -->
+        <div class="input-card">
+          <div class="field">
+            <label class="field-label" for="speedDay">Day of Period (1–28)</label>
+            <div class="field-wrap">
+              <input class="field-input" id="speedDay"
+                type="number" inputmode="numeric" min="1" max="28" step="1" placeholder="1"
+                oninput="onSpeedInput()" autocomplete="off" />
+            </div>
+            <div class="field-error" id="speedDay-error" role="alert" aria-live="polite" style="display:none">
+              <svg width="14" height="14" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 10a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"/></svg>
+              <span>Must be 1–28</span>
+            </div>
+            <div class="speed-badges" id="speedBadges" style="display:none;margin-top:4px">
+              <span class="speed-badge primary" id="speedWeekBadge">Week 1</span>
+              <span class="speed-badge secondary" id="speedDayBadge">Day 1</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Current Period Avg (conditional) -->
+        <div class="input-card" id="speedAvgCard" style="display:none">
+          <div class="field">
+            <label class="field-label" for="speedAvg">Current Period Avg (mm:ss)</label>
+            <div class="field-hint">Your average so far this period</div>
+            <div class="field-wrap">
+              <input class="field-input" id="speedAvg"
+                type="text" inputmode="text" placeholder="3:10"
+                oninput="onSpeedInput()" autocomplete="off" />
+            </div>
+            <div class="field-error" id="speedAvg-error" role="alert" aria-live="polite" style="display:none">
+              <svg width="14" height="14" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 10a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"/></svg>
+              <span>Enter time as m:ss (e.g. 3:10)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Progress -->
+        <div class="speed-progress" id="speedProgress" style="display:none">
+          <div class="speed-progress-head">
+            <span>Period progress</span>
+            <span id="speedProgressDays">0/28 days done</span>
+          </div>
+          <div class="speed-progress-bar">
+            <div class="speed-progress-fill" id="speedProgressFill" style="width:0%"></div>
+          </div>
+          <div class="speed-progress-foot">
+            <span id="speedProgressLeft">28 days left</span>
+            <span id="speedProgressPct">0%</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- Result -->
+    <section aria-labelledby="speed-result-heading" aria-live="polite" aria-atomic="true">
+      <div class="section-heading">
+        <h2 id="speed-result-heading">Required Pace</h2>
+      </div>
+      <div class="speed-result empty" id="speedResult">
+        <div class="speed-result-label" id="speedResultLabel">Required Pace</div>
+        <div class="speed-result-value" id="speedResultValue">—:—</div>
+        <div class="speed-result-sub" id="speedResultSub">Enter your goal &amp; day to see your required speed</div>
+        <div class="speed-stats" id="speedStats" style="display:none">
+          <div class="speed-stat">
+            <div class="speed-stat-label">Goal</div>
+            <div class="speed-stat-value" id="speedStatGoal">—:—</div>
+          </div>
+          <div class="speed-stat">
+            <div class="speed-stat-label">Current Avg</div>
+            <div class="speed-stat-value" id="speedStatAvg">—:—</div>
+          </div>
+        </div>
+        <div class="speed-note" id="speedNote" style="display:none">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m0 3h.008v.008H12v-.008zM21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          <span id="speedNoteText"></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- How the math works -->
+    <details class="summary-details" style="margin-top:20px">
+      <summary class="summary-summary">
+        <span>How the math works</span>
+        <svg class="chevron" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+        </svg>
+      </summary>
+      <div style="padding:16px 20px;font-family:'JetBrains Mono', monospace;font-size:12px;color:var(--muted);line-height:1.7;border-top:1px solid var(--border)">
+        <p>required = (goal × 28 − currentAvg × daysDone) / daysLeft</p>
+        <p style="margin-top:8px">daysDone = dayOfPeriod − 1</p>
+        <p>daysLeft = 28 − daysDone</p>
+        <p style="margin-top:12px;font-family:'DM Sans',sans-serif;font-style:italic;color:var(--muted-light)">
+          Period performance is a simple average of all 28 daily speeds.
+        </p>
+      </div>
+    </details>
+
+  </div><!-- end speed panel -->
+
   <footer class="footer">
-    <div>Truck Order Calculator · Inputs saved automatically</div>
+    <div>Delight Restaurant Group · Saved automatically</div>
     <div>Displayed to the cent</div>
     <div class="footer-credit">
       Developed by Zachary Kirby
@@ -926,9 +1200,226 @@
     el('tWeeklyTotal').textContent   = fmt(weeklyTotal);
   }
 
+  // ── Tabs ────────────────────────────────────────────────────────────────────
+  const TAB_KEY = 'wendys-truck-calc-active-tab';
+  const TAB_TITLES = { truck: 'Truck Order Calc', speed: 'DT Speed' };
+
+  function setActiveTab(name) {
+    document.querySelectorAll('.tab').forEach(t => {
+      const on = t.dataset.tab === name;
+      t.classList.toggle('is-active', on);
+      t.setAttribute('aria-selected', on ? 'true' : 'false');
+    });
+    document.querySelectorAll('.tab-panel').forEach(p => {
+      p.hidden = p.dataset.panel !== name;
+    });
+    el('headerTitle').textContent = TAB_TITLES[name] || TAB_TITLES.truck;
+    try { localStorage.setItem(TAB_KEY, name); } catch(e) {}
+  }
+
+  document.querySelectorAll('.tab').forEach(t => {
+    t.addEventListener('click', () => {
+      if (navigator.vibrate) navigator.vibrate(8);
+      setActiveTab(t.dataset.tab);
+    });
+  });
+
+  function getActiveTab() {
+    const active = document.querySelector('.tab.is-active');
+    return active ? active.dataset.tab : 'truck';
+  }
+
+  function clearActive() {
+    if (getActiveTab() === 'speed') resetSpeed();
+    else clearSales();
+  }
+
+  // ── DT Speed planner ─────────────────────────────────────────────────────────
+  const SPEED_KEY = 'wendys-truck-calc-speed-v1';
+  const SPEED_TOTAL_DAYS = 28;
+  const SPEED_DEFAULTS = { goal: '2:55', day: '1', avg: '' };
+
+  function parseMMSS(str) {
+    if (!str || typeof str !== 'string') return null;
+    const cleaned = str.replace(/[^0-9:]/g, '');
+    const parts = cleaned.split(':');
+    if (parts.length !== 2) return null;
+    const m = parseInt(parts[0], 10);
+    const s = parseInt(parts[1], 10);
+    if (isNaN(m) || isNaN(s)) return null;
+    if (m < 0 || s < 0 || s > 59) return null;
+    return m * 60 + s;
+  }
+
+  function formatMMSS(totalSec) {
+    if (totalSec === null || totalSec === undefined || isNaN(totalSec)) return '—:—';
+    const clamped = Math.max(0, Math.round(totalSec));
+    const m = Math.floor(clamped / 60);
+    const s = clamped % 60;
+    return m + ':' + (s < 10 ? '0' + s : s);
+  }
+
+  function saveSpeed() {
+    try {
+      localStorage.setItem(SPEED_KEY, JSON.stringify({
+        goal: el('speedGoal').value, day: el('speedDay').value, avg: el('speedAvg').value
+      }));
+    } catch(e) {}
+  }
+
+  function loadSpeed() {
+    let saved = SPEED_DEFAULTS;
+    try {
+      const raw = localStorage.getItem(SPEED_KEY);
+      if (raw) saved = Object.assign({}, SPEED_DEFAULTS, JSON.parse(raw));
+    } catch(e) {}
+    el('speedGoal').value = saved.goal;
+    el('speedDay').value  = saved.day;
+    el('speedAvg').value  = saved.avg;
+  }
+
+  function resetSpeed() {
+    el('speedGoal').value = SPEED_DEFAULTS.goal;
+    el('speedDay').value  = SPEED_DEFAULTS.day;
+    el('speedAvg').value  = SPEED_DEFAULTS.avg;
+    if (navigator.vibrate) navigator.vibrate(10);
+    try { localStorage.removeItem(SPEED_KEY); } catch(e) {}
+    speedCalc();
+  }
+
+  function onSpeedInput() { saveSpeed(); speedCalc(); }
+
+  function setSpeedError(id, show) {
+    const e = el(id + '-error'), i = el(id);
+    if (!e || !i) return;
+    e.style.display = show ? 'flex' : 'none';
+    show ? i.classList.add('is-error') : i.classList.remove('is-error');
+  }
+
+  function speedCalc() {
+    const goalRaw = el('speedGoal').value;
+    const dayRaw  = el('speedDay').value;
+    const avgRaw  = el('speedAvg').value;
+
+    const goalSec = parseMMSS(goalRaw);
+    const dayNum  = parseInt(dayRaw, 10);
+    const avgSec  = parseMMSS(avgRaw);
+
+    const validDay = !isNaN(dayNum) && dayNum >= 1 && dayNum <= 28;
+    const daysDone = validDay ? dayNum - 1 : 0;
+    const daysLeft = validDay ? SPEED_TOTAL_DAYS - daysDone : 0;
+    const needsAvg = daysDone > 0;
+
+    setSpeedError('speedGoal', goalRaw.length > 0 && goalSec === null);
+    setSpeedError('speedDay',  dayRaw.length > 0 && !validDay);
+    setSpeedError('speedAvg',  needsAvg && avgRaw.length > 0 && avgSec === null);
+
+    el('speedAvgCard').style.display = needsAvg ? 'block' : 'none';
+
+    if (validDay) {
+      const week = Math.ceil(dayNum / 7);
+      const dayInWeek = ((dayNum - 1) % 7) + 1;
+      el('speedWeekBadge').textContent = 'Week ' + week;
+      el('speedDayBadge').textContent  = 'Day ' + dayInWeek;
+      el('speedBadges').style.display = 'flex';
+
+      const pct = (daysDone / SPEED_TOTAL_DAYS) * 100;
+      el('speedProgressFill').style.width = pct + '%';
+      el('speedProgressDays').textContent = daysDone + '/' + SPEED_TOTAL_DAYS + ' days done';
+      el('speedProgressLeft').textContent = daysLeft + ' day' + (daysLeft !== 1 ? 's' : '') + ' left';
+      el('speedProgressPct').textContent  = Math.round(pct) + '%';
+      el('speedProgress').style.display = 'block';
+    } else {
+      el('speedBadges').style.display = 'none';
+      el('speedProgress').style.display = 'none';
+    }
+
+    let requiredSec = null, status = null;
+
+    if (goalSec !== null && validDay) {
+      if (daysDone === 0) { requiredSec = goalSec; status = 'day1'; }
+      else if (daysLeft <= 0) { status = 'final'; }
+      else if (avgSec !== null) {
+        const raw = (goalSec * SPEED_TOTAL_DAYS - avgSec * daysDone) / daysLeft;
+        if (raw < 0) { requiredSec = 0; status = 'ahead'; }
+        else { requiredSec = raw; status = 'ok'; }
+      }
+    }
+
+    renderSpeedResult(status, requiredSec, goalSec, avgSec, daysLeft, needsAvg);
+  }
+
+  function renderSpeedResult(status, requiredSec, goalSec, avgSec, daysLeft, needsAvg) {
+    const result = el('speedResult'), labelEl = el('speedResultLabel'), valueEl = el('speedResultValue');
+    const subEl = el('speedResultSub'), statsEl = el('speedStats'), noteEl = el('speedNote'), noteText = el('speedNoteText');
+
+    result.className = 'speed-result';
+    statsEl.style.display = 'none';
+    noteEl.style.display = 'none';
+
+    if (status === null) {
+      result.classList.add('empty');
+      labelEl.textContent = 'Required Pace';
+      valueEl.textContent = '—:—';
+      subEl.textContent = needsAvg
+        ? 'Enter your goal, day, and current average to calculate.'
+        : 'Enter your goal & day to see your required speed.';
+      return;
+    }
+    if (status === 'day1') {
+      result.classList.add('green');
+      labelEl.textContent = 'Day 1 — Hit Your Goal';
+      valueEl.textContent = formatMMSS(goalSec);
+      subEl.textContent = 'No history yet. Run at goal speed to start on track.';
+      return;
+    }
+    if (status === 'ahead') {
+      result.classList.add('green');
+      labelEl.textContent = 'Ahead of Goal';
+      valueEl.textContent = '0:00';
+      subEl.textContent = "Even at 0:00 the math says you're beating goal. Keep it up!";
+      return;
+    }
+    if (status === 'final') {
+      result.classList.add('brand');
+      labelEl.textContent = 'Period Complete';
+      valueEl.textContent = formatMMSS(avgSec);
+      subEl.textContent = 'All 28 days are done. Your final average is your period result.';
+      return;
+    }
+
+    // status === 'ok'
+    if (requiredSec > goalSec * 1.15) result.classList.add('red');
+    else if (requiredSec > goalSec) result.classList.add('amber');
+    else result.classList.add('brand');
+    labelEl.textContent = 'Required Avg From Today';
+    valueEl.textContent = formatMMSS(requiredSec);
+    subEl.textContent = '';
+
+    el('speedStatGoal').textContent = formatMMSS(goalSec);
+    el('speedStatAvg').textContent  = formatMMSS(avgSec);
+    statsEl.style.display = 'grid';
+
+    if (requiredSec > goalSec * 1.15) {
+      noteText.textContent = "Significantly behind — you'll need to push hard for " + daysLeft + ' day' + (daysLeft !== 1 ? 's' : '') + '.';
+      noteEl.style.display = 'flex';
+    } else if (requiredSec < goalSec) {
+      noteText.textContent = 'Trending ahead — required speed is faster than your goal.';
+      noteEl.style.display = 'flex';
+    }
+  }
+
   // ── Init ─────────────────────────────────────────────────────────────────────
   loadInputs();
   calc();
+
+  loadSpeed();
+  speedCalc();
+
+  try {
+    const savedTab = localStorage.getItem(TAB_KEY);
+    if (savedTab === 'speed') setActiveTab(savedTab);
+  } catch(e) {}
 
   // ── Service Worker (PWA offline support) ────────────────────────────────────
   if ('serviceWorker' in navigator) {
